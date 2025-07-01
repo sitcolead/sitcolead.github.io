@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Discussion - Moderator's Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .speaker-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            scroll-margin-top: 20px;
+        }
+
+        .speaker-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .speaker-name {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .speaker-title {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .moderator-info {
+            font-size: 1rem;
+            color: #e67e22;
+            font-weight: 600;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: rgba(230, 126, 34, 0.1);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .questions-container {
+            margin-bottom: 25px;
+        }
+
+        .question-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .question-item:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .extra-question {
+            background: #fff3e0;
+            border-left: 4px solid #e67e22;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .extra-question:hover {
+            background: #ffecb3;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Modal styles for focused question view */
+        .question-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .question-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .modal-speaker-info {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .modal-speaker-name {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .modal-speaker-title {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .modal-moderator {
+            background: linear-gradient(45deg, #e67e22, #f39c12);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .modal-question-number {
+            font-size: 1.5rem;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-question-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #2c3e50;
+            text-align: left;
+        }
+
+        .modal-question-text .highlight {
+            background: linear-gradient(120deg, #a8e6cf 0%, #dcedc8 100%);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        .click-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.8rem;
+            color: #95a5a6;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .question-item:hover .click-hint,
+        .extra-question:hover .click-hint {
+            opacity: 1;
+        }
+
+        .question-number {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8e6cf 0%, #dcedc8 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        .extra-questions {
+            border-top: 2px dashed #bbb;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .extra-header {
+            font-size: 1.2rem;
+            color: #e67e22;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .extra-header::before {
+            content: "⭐";
+            margin-right: 8px;
+            font-size: 1.3rem;
+        }
+
+        .extra-question {
+            background: #fff3e0;
+            border-left: 4px solid #e67e22;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+        }
+
+        .reserved-tag {
+            background: #ff9800;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                width: 200px;
+            }
+            
+            .speaker-name {
+                font-size: 1.5rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Skills-First Panel Discussion</h1>
+            <p>Moderator's Question Reference Guide</p>
+            <div class="nav-buttons">
+                <a href="#soon-joo" class="nav-btn">Dr. Soon-Joo Gog</a>
+                <a href="#patrick" class="nav-btn">Mr. Patrick Kidd</a>
+                <a href="#tracey" class="nav-btn">Ms. Tracey Donnery</a>
+            </div>
+        </div>
+
+        <div id="soon-joo" class="speaker-section">
+            <div class="speaker-header">
+                <div class="speaker-name">Dr. Soon-Joo Gog</div>
+                <div class="speaker-title">Chief Skills Officer, SkillsFuture Singapore</div>
+                <div class="moderator-info">Questions by: May</div>
+            </div>
+            
+            <div class="questions-container">
+                <div class="question-item" onclick="openQuestionModal('Dr. Soon-Joo Gog', 'Chief Skills Officer, SkillsFuture Singapore', 'May', 'Question 1', 'I was intrigued by your recent paper titled &quot;Skills-First: Are We There Yet?&quot; which examines the structural inefficiencies impeding systemic progress towards a skills-first economy. Additionally, there was a subsequent roundtable discussion on this topic. Kindly share with the audience <span class=&quot;highlight&quot;>the impetus behind skills-first approaches</span> and how they integrate into the SkillsFuture movement, particularly for employers and individuals.')">
+                    <div class="question-number">Question 1</div>
+                    <div class="question-text">
+                        I was intrigued by your recent paper titled "Skills-First: Are We There Yet?" which examines the structural inefficiencies impeding systemic progress towards a skills-first economy. Additionally, there was a subsequent roundtable discussion on this topic. Kindly share with the audience <span class="highlight">the impetus behind skills-first approaches</span> and how they integrate into the SkillsFuture movement, particularly for employers and individuals.
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+
+                <div class="question-item" onclick="openQuestionModal('Dr. Soon-Joo Gog', 'Chief Skills Officer, SkillsFuture Singapore', 'May', 'Question 2', 'A critical aspect of skills-first approaches involves effective signalling. Could you provide more details on the mechanism for skills signalling? What initiatives are being pursued in Singapore regarding <span class=&quot;highlight&quot;>digital credentials and skills passports</span> to enhance trust and transparency within the country\'s skills ecosystem?')">
+                    <div class="question-number">Question 2</div>
+                    <div class="question-text">
+                        A critical aspect of skills-first approaches involves effective signalling. Could you provide more details on the mechanism for skills signalling? What initiatives are being pursued in Singapore regarding <span class="highlight">digital credentials and skills passports</span> to enhance trust and transparency within the country's skills ecosystem?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+
+                <div class="question-item" onclick="openQuestionModal('Dr. Soon-Joo Gog', 'Chief Skills Officer, SkillsFuture Singapore', 'May', 'Question 3', 'What methods has Singapore implemented to forecast future skills requirements in a rapidly changing economy? How does SkillsFuture incorporate <span class=&quot;highlight&quot;>artificial intelligence and data analytics into its national skills planning</span> and execution to predict skills needs?')">
+                    <div class="question-number">Question 3</div>
+                    <div class="question-text">
+                        What methods has Singapore implemented to forecast future skills requirements in a rapidly changing economy? How does SkillsFuture incorporate <span class="highlight">artificial intelligence and data analytics into its national skills planning</span> and execution to predict skills needs?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="patrick" class="speaker-section">
+            <div class="speaker-header">
+                <div class="speaker-name">Mr. Patrick Kidd</div>
+                <div class="speaker-title">CEO, Future Skills Organisation (Australia)</div>
+                <div class="moderator-info">Questions by: Martin</div>
+            </div>
+            
+            <div class="questions-container">
+                <div class="question-item" onclick="openQuestionModal('Mr. Patrick Kidd', 'CEO, Future Skills Organisation (Australia)', 'Martin', 'Question 1', 'Can you share insights on how collaboration between government, industry, and education providers is shaping future skills development in Australia?')">
+                    <div class="question-number">Question 1</div>
+                    <div class="question-text">
+                        Can you share insights on how collaboration between government, industry, and education providers is shaping future skills development in Australia?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+
+                <div class="question-item" onclick="openQuestionModal('Mr. Patrick Kidd', 'CEO, Future Skills Organisation (Australia)', 'Martin', 'Question 2', 'How is Australia addressing the challenge of reskilling workers in traditional industries facing automation?')">
+                    <div class="question-number">Question 2</div>
+                    <div class="question-text">
+                        How is Australia addressing the challenge of reskilling workers in traditional industries facing automation?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+
+                <div class="question-item" onclick="openQuestionModal('Mr. Patrick Kidd', 'CEO, Future Skills Organisation (Australia)', 'Martin', 'Question 3', 'What role do micro-credentials and digital badges play in Australia\'s future skills strategy and what other innovations are being explored in <span class=&quot;highlight&quot;>skills validation and assessment</span> to ensure workers can demonstrate real-world competencies?')">
+                    <div class="question-number">Question 3</div>
+                    <div class="question-text">
+                        What role do micro-credentials and digital badges play in Australia's future skills strategy and what other innovations are being explored in <span class="highlight">skills validation and assessment</span> to ensure workers can demonstrate real-world competencies?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+            </div>
+
+            <div class="extra-questions">
+                <div class="extra-header">Reserve Question (if time allows)</div>
+                <div class="extra-question" onclick="openQuestionModal('Mr. Patrick Kidd', 'CEO, Future Skills Organisation (Australia)', 'Martin', 'Reserve Question', 'Australia has taken a demand-driven approach to skills development. How does Future Skills Organisation ensure alignment between industry needs and training programs?')">
+                    <span class="reserved-tag">RESERVED</span>
+                    Australia has taken a demand-driven approach to skills development. How does Future Skills Organisation ensure alignment between industry needs and training programs?
+                    <div class="click-hint">Click to focus</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tracey" class="speaker-section">
+            <div class="speaker-header">
+                <div class="speaker-name">Ms. Tracey Donnery</div>
+                <div class="speaker-title">Director of Policy & Communications, Skillnet Ireland</div>
+                <div class="moderator-info">Questions by: May</div>
+            </div>
+            
+            <div class="questions-container">
+                <div class="question-item" onclick="openQuestionModal('Ms. Tracey Donnery', 'Director of Policy &amp; Communications, Skillnet Ireland', 'May', 'Question 1', 'Skillnet Ireland emphasizes enterprise-led training. How does this model enhance responsiveness to market changes?')">
+                    <div class="question-number">Question 1</div>
+                    <div class="question-text">
+                        Skillnet Ireland emphasizes enterprise-led training. How does this model enhance responsiveness to market changes?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+
+                <div class="question-item" onclick="openQuestionModal('Ms. Tracey Donnery', 'Director of Policy &amp; Communications, Skillnet Ireland', 'May', 'Question 2', 'What lessons has Ireland learned from its approach to upskilling in high-growth sectors like tech and green energy?')">
+                    <div class="question-number">Question 2</div>
+                    <div class="question-text">
+                        What lessons has Ireland learned from its approach to upskilling in high-growth sectors like tech and green energy?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+
+                <div class="question-item" onclick="openQuestionModal('Ms. Tracey Donnery', 'Director of Policy &amp; Communications, Skillnet Ireland', 'May', 'Question 3', 'How does Skillnet Ireland support SMEs in navigating future skills challenges?')">
+                    <div class="question-number">Question 3</div>
+                    <div class="question-text">
+                        How does Skillnet Ireland support SMEs in navigating future skills challenges?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+            </div>
+
+            <div class="extra-questions">
+                <div class="extra-header">Extra Questions / Audience Questions</div>
+                <div class="extra-question" onclick="openQuestionModal('Panel Discussion', 'All Speakers', 'May/Martin', 'Extra Question 1', 'How are your countries ensuring <span class=&quot;highlight&quot;>interoperability of skills credentials</span> across borders to support global talent mobility?')">
+                    <div class="question-text">
+                        How are your countries ensuring <span class="highlight">interoperability of skills credentials</span> across borders to support global talent mobility?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+                <div class="extra-question" onclick="openQuestionModal('Panel Discussion', 'All Speakers', 'May/Martin', 'Extra Question 2', 'How do you see the future of <span class=&quot;highlight&quot;>skills-based hiring transforming traditional education and recruitment systems</span>?')">
+                    <div class="question-text">
+                        How do you see the future of <span class="highlight">skills-based hiring transforming traditional education and recruitment systems</span>?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+                <div class="extra-question" onclick="openQuestionModal('Panel Discussion', 'All Speakers', 'May/Martin', 'Extra Question 3', 'What innovations are you seeing in <span class=&quot;highlight&quot;>AI-driven or adaptive skills assessments</span>?')">
+                    <div class="question-text">
+                        What innovations are you seeing in <span class="highlight">AI-driven or adaptive skills assessments</span>?
+                    </div>
+                    <div class="click-hint">Click to focus</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-modal" id="questionModal" onclick="closeQuestionModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeQuestionModal()">&times;</button>
+            <div class="modal-speaker-info">
+                <div class="modal-speaker-name" id="modalSpeakerName"></div>
+                <div class="modal-speaker-title" id="modalSpeakerTitle"></div>
+                <div class="modal-moderator" id="modalModerator"></div>
+            </div>
+            <div class="modal-question-number" id="modalQuestionNumber"></div>
+            <div class="modal-question-text" id="modalQuestionText"></div>
+        </div>
+    </div>
+
+    <button class="scroll-top" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.querySelector('.scroll-top');
+            if (window.pageYOffset > 300) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        });
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Add hover effects to question items
+        document.querySelectorAll('.question-item, .extra-question').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Question modal functions
+        function openQuestionModal(speakerName, speakerTitle, moderator, questionNumber, questionText) {
+            document.getElementById('modalSpeakerName').textContent = speakerName;
+            document.getElementById('modalSpeakerTitle').textContent = speakerTitle;
+            document.getElementById('modalModerator').textContent = `Questions by: ${moderator}`;
+            document.getElementById('modalQuestionNumber').textContent = questionNumber;
+            document.getElementById('modalQuestionText').innerHTML = questionText;
+            
+            document.getElementById('questionModal').classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeQuestionModal(event) {
+            if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-close')) {
+                return;
+            }
+            
+            document.getElementById('questionModal').classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeQuestionModal();
+            }
+        });
+    </script>
+</body>
+</html>
